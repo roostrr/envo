@@ -136,9 +136,15 @@ dmypy.json
 
 # Data files (if too large)
 *.csv
-*.json
 *.xlsx
 *.xls
+
+# JSON files (but allow package.json and package-lock.json)
+*.json
+!package.json
+!*/package.json
+!package-lock.json
+!*/package-lock.json
 
 # Temporary files
 *.tmp
