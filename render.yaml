@@ -25,6 +25,7 @@ services:
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn standardized_app:app -b 0.0.0.0:$PORT
+    pythonVersion: "3.11"
     envVars:
       - key: FLASK_ENV
         value: production
