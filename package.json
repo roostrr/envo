@@ -1,0 +1,29 @@
+{
+  "name": "university-recruitment-platform",
+  "version": "1.0.0",
+  "description": "AI-powered university recruitment platform with career forecasting and educational content",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "university",
+    "recruitment",
+    "ai",
+    "career-forecasting",
+    "education"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "json2csv": "^6.0.0-alpha.2"
+  }
+}

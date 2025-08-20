@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 // You'll need to install mermaid: npm install mermaid
-// import mermaid from 'mermaid';
+import mermaid from 'mermaid';
 
 const MermaidFlowchart = () => {
   const mermaidRef = useRef<HTMLDivElement>(null);
@@ -10,10 +10,8 @@ const MermaidFlowchart = () => {
     // Initialize mermaid when component mounts
     const initMermaid = async () => {
       try {
-        // Dynamic import to avoid SSR issues
-        const mermaid = await import('mermaid');
-        
-        mermaid.default.initialize({
+        // Initialize mermaid
+        mermaid.initialize({
           startOnLoad: true,
           theme: 'dark',
           flowchart: {
