@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
-const { spawn } = require('child_process');
+
 const path = require('path');
 const axios = require('axios');
 require('dotenv').config();
@@ -63,7 +63,8 @@ app.use('/api', chatFeedbackRoutes);
 // Proxy routes for Flask ML service
 app.all('/api/standardized/*', async (req, res) => {
   try {
-    const flaskUrl = `http://localhost:5004${req.url}`;
+    const mlServiceUrl = process.env.ML_SERVICE_URL || 'http://localhost:5004';
+    const flaskUrl = `${mlServiceUrl}${req.url}`;
     console.log(`Proxying request to Flask: ${req.method} ${flaskUrl}`);
     
     const response = await axios({
@@ -134,52 +135,22 @@ const connectDB = async () => {
   }
 };
 
-// Flask app startup function
-const startFlaskApp = () => {
-  return new Promise((resolve, reject) => {
-    console.log('Starting Flask ML service...');
-    
-    const flaskProcess = spawn('python', ['standardized_app.py'], {
-      cwd: __dirname,
-      stdio: ['pipe', 'pipe', 'pipe']
-    });
-
-    let flaskStarted = false;
-
-    flaskProcess.stdout.on('data', (data) => {
-      const output = data.toString();
-      console.log(`Flask: ${output.trim()}`);
-      
-      // Check if Flask app is ready
-      if (output.includes('Running on http://127.0.0.1:5004') && !flaskStarted) {
-        flaskStarted = true;
-        console.log('✅ Flask ML service started successfully on port 5004');
-        resolve(flaskProcess);
-      }
-    });
-
-    flaskProcess.stderr.on('data', (data) => {
-      const error = data.toString();
-      console.log(`Flask Error: ${error.trim()}`);
-    });
-
-    flaskProcess.on('error', (error) => {
-      console.error('❌ Failed to start Flask app:', error);
-      reject(error);
-    });
-
-    flaskProcess.on('close', (code) => {
-      console.log(`Flask process exited with code ${code}`);
-    });
-
-    // Timeout after 10 seconds
-    setTimeout(() => {
-      if (!flaskStarted) {
-        console.log('⚠️ Flask app startup timeout - continuing without Flask service');
-        resolve(null);
-      }
-    }, 10000);
-  });
+// Flask service check function
+const checkFlaskService = async () => {
+  try {
+    const mlServiceUrl = process.env.ML_SERVICE_URL;
+    if (mlServiceUrl) {
+      const response = await axios.get(`${mlServiceUrl}/health`, { timeout: 5000 });
+      console.log('✅ ML service is available');
+      return true;
+    } else {
+      console.log('⚠️ ML_SERVICE_URL not configured');
+      return false;
+    }
+  } catch (error) {
+    console.log('⚠️ ML service is not available:', error.message);
+    return false;
+  }
 };
 
 // Start server
@@ -187,12 +158,8 @@ const PORT = process.env.PORT || 5001;
 const startServer = async () => {
   await connectDB();
   
-  // Start Flask app
-  try {
-    await startFlaskApp();
-  } catch (error) {
-    console.log('⚠️ Flask app failed to start - continuing without ML service');
-  }
+  // Check ML service availability
+  await checkFlaskService();
   
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT}`);
