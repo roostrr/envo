@@ -28,7 +28,7 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       python verify_deployment.py
-    startCommand: gunicorn standardized_app:app -b 0.0.0.0:$PORT
+    startCommand: python start_ml_service.py
     pythonVersion: "3.12"
     envVars:
       - key: FLASK_ENV
