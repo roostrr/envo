@@ -29,7 +29,6 @@ services:
       pip install -r requirements.txt
       python verify_deployment.py
     startCommand: python minimal_ml_service.py
-    pythonVersion: "3.12"
     envVars:
       - key: FLASK_ENV
         value: production
@@ -37,5 +36,3 @@ services:
         value: 10000
     healthCheckPath: /health
     autoDeploy: true
-
-# Force redeploy timestamp: 2025-08-22T02:10:52.733065
