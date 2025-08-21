@@ -323,3 +323,6 @@ if __name__ == '__main__':
     # Get port from environment or default
     port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port, debug=False)
+#   F o r c e   r e d e p l o y   -   0 8 / 2 2 / 2 0 2 5   0 2 : 0 9 : 0 0  
+ 
+# Force redeploy timestamp: 2025-08-22T02:10:52.733065
