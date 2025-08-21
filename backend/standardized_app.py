@@ -374,6 +374,6 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"Error loading ML model: {e}")
     
-    # Run on the port specified by the PORT environment variable, or default to 5004
-    port = int(os.environ.get('PORT', 5004))
+    # Run on the port specified by the PORT environment variable, or default to 10000
+    port = int(os.environ.get('PORT', 10000))
     app.run(host='0.0.0.0', port=port, debug=False) 
