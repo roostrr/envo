@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import logging
 import time
+import os
 from datetime import datetime
 from standardized_data_collection import standardized_data_collection
 from ml_recruitment_service import recruitment_service
@@ -166,6 +167,15 @@ def get_programs_by_cluster(cluster_name):
             'success': False,
             'message': f"Error retrieving programs: {str(e)}"
         }), 500
+
+@app.route('/health', methods=['GET'])
+def simple_health_check():
+    """Simple health check endpoint for Render"""
+    return jsonify({
+        'status': 'OK',
+        'message': 'ML service is running',
+        'timestamp': datetime.now().isoformat()
+    }), 200
 
 @app.route('/api/standardized/health', methods=['GET'])
 def health_check():
@@ -364,5 +374,6 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"Error loading ML model: {e}")
     
-    # Run on port 5004 to match the Node.js backend configuration
-    app.run(host='0.0.0.0', port=5004, debug=True) 
+    # Run on the port specified by the PORT environment variable, or default to 5004
+    port = int(os.environ.get('PORT', 5004))
+    app.run(host='0.0.0.0', port=port, debug=False) 

@@ -89,6 +89,15 @@ app.all('/api/standardized/*', async (req, res) => {
 });
 
 // Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ 
+    status: 'OK', 
+    message: 'University Recruitment Platform API is running',
+    timestamp: new Date().toISOString(),
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 

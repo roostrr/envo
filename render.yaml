@@ -4,8 +4,10 @@ services:
     env: node
     plan: free
     rootDir: backend
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: |
+      npm install
+      node test_node_startup.js
+    startCommand: node start_node_service.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -23,13 +25,15 @@ services:
     env: python
     plan: free
     rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn standardized_app:app -b 0.0.0.0:$PORT
+    buildCommand: |
+      pip install -r requirements.txt
+      python verify_deployment.py
+    startCommand: python start_ml_service.py
     pythonVersion: "3.12"
     envVars:
       - key: FLASK_ENV
         value: production
       - key: PORT
-        value: 10000
+        value: 5004
     healthCheckPath: /health
     autoDeploy: true
