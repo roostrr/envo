@@ -17,6 +17,8 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false
+      - key: ML_SERVICE_URL
+        value: https://university-recruitment-ml-service.onrender.com
     healthCheckPath: /api/health
     autoDeploy: true
 
