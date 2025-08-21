@@ -28,7 +28,7 @@ services:
     buildCommand: |
       pip install -r requirements.txt
       python verify_deployment.py
-    startCommand: python start_ml_service.py
+    startCommand: python minimal_ml_service.py
     pythonVersion: "3.12"
     envVars:
       - key: FLASK_ENV
